@@ -1,13 +1,15 @@
-service: "scripts_bento.service:EnergyService"
-description: "Energy prediction service using BentoML 1.4.29"
+service: "seattle_energy.service:EnergyService"
+description: "Energy consumption prediction API for Seattle building benchmarking"
 labels:
-  owner: karap
-  stage: dev
+  owner: openclassrooms
+  project: seattle-energy-forecast
 
 include:
-  - "scripts_bento/*.py"
-  - "data/"
-  - "bentofile.yaml"
+  - "src/seattle_energy/*.py"
+  - "data/processed/*.csv"
+
+models:
+  - random_forest_energy:latest
 
 python:
   packages:
@@ -16,4 +18,4 @@ python:
     - numpy
     - pydantic
     - pandera
-    - bentoml==1.4.29
+    - bentoml==1.4.30

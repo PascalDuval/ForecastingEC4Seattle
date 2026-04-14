@@ -1,68 +1,337 @@
-# Projet 6 - Conso Batiment (Seattle 2016)
+# Seattle Building Energy Forecast — Student Case Study
 
-## Objectif
-Predire la consommation energetique `SiteEnergyUse(kBtu)` des batiments du benchmark public de Seattle 2016 en partant d un jeu de donnees nettoye et en exposant un service BentoML.
+This repository is a learning project for predicting energy consumption in Seattle buildings. It is designed to help students run a complete data science workflow, verify results, and innovate with new models and APIs.
 
-## Organisation des fichiers
-- `analyse_exploratoire.ipynb` : exploration initiale, nettoyage de base et premiers graphiques.
-- `feature andMore.ipynb` : feature engineering (encodages, normalisation, traitement des valeurs extremes) et export des jeux prets pour le ML.
-- `modeles.ipynb` : essais et comparaison de modeles (regressions, XGBoost, reseaux de neurones), selection du RandomForest final.
-- `data/` : jeux de donnees. `2016_Building_Energy_Benchmarking.csv` (brut), versions purgees/ML/intermediaires, `feature_engineered_cleaned_for_bento.csv` (jeu final consomme par BentoML), fichiers d outliers (`top_extreme_intensity_outliers.csv`, `outliers_surface_energy.csv`).
-- `scripts_bento/save_model.py` : entraine un `RandomForestRegressor` sur `feature_engineered_cleaned_for_bento.csv` et sauvegarde le modele dans le store BentoML avec la liste des features.
-- `scripts_bento/service.py` : service BentoML 1.4.29 expose `/predict`, `/ping` et `/model_info` avec validation Pydantic + Pandera et mapping des colonnes avant inference.
-- `scripts_bento/service - back.py` : version minimale de service (legacy) gardee en reference.
-- `scripts_bento/test_save_model.py` : smoke test local pour charger le modele sauvegarde et generer une prediction a partir d un DataFrame.
-- `scripts_bento/test_api.py` : appel HTTP exemple sur `http://127.0.0.1:3000/predict` (format JSON BentoML attendu `{"data": {...}}`).
-- `bentofile.yaml` : configuration BentoML (service cible, dependances et fichiers embarques) utilisee par `bentoml build`.
-- `pyproject.toml` / `poetry.lock` : dependances du projet (Python 3.11, scikit-learn, pandas, pandera, bentoml, etc.).
+## Purpose and scope
 
-## Prerequis et installation
-- Python 3.11 et Poetry installes localement.
-- Recuperer les donnees deja presentes dans `data/` (pas d appel reseau necessaire).
-- Installer l environnement :
-  ```bash
-  poetry install
-  poetry shell   # ou prefixer chaque commande par "poetry run"
-  ```
+This case study aims to help every student:
+- transform raw energy data into model-ready features
+- train and evaluate a regression model
+- package the model as a production-ready service
+- serve predictions through an API
+- build confidence in the complete ML lifecycle
 
-## Entrainement et sauvegarde du modele BentoML
-1) Verifier/mettre a jour les features via les notebooks si besoin (les sorties ecrivent dans `data/`).
-2) Enregistrer le modele RandomForest :
+> No final model metrics or numeric results are provided here. Students must run the pipeline themselves and interpret the outputs.
+
+## Learning objectives
+
+By working with this project, students should be able to:
+- prepare raw data for machine learning
+- perform feature engineering for regression
+- split data into training and test sets
+- evaluate model performance with R², MAE, and RMSE
+- wrap a model in a BentoML API
+- verify service behavior with client requests
+- extend the pipeline with new models, features, or endpoints
+
+## Syllabus
+
+This case study is part of a data engineering and machine learning curriculum focused on real-world applications in environmental prediction (inspired by Seattle emissions and energy data). The syllabus covers:
+
+### Pedagogical Objectives
+- Understand the end-to-end data science pipeline from raw data to deployed API.
+- Develop skills in data preprocessing, model training, and production deployment.
+- Learn best practices for reproducible and scalable ML projects.
+- Encourage experimentation and critical thinking in model improvement.
+
+### Key Competencies Acquired
+- Data manipulation with Pandas and NumPy.
+- Feature engineering for predictive modeling.
+- Regression analysis and hyperparameter tuning with Scikit-learn.
+- API development and validation with BentoML and Pydantic.
+- Containerization and deployment with Docker.
+- Version control and collaborative development with Git and GitHub.
+
+### Assessment and Evaluation
+- Successful execution of the full pipeline (data preparation, training, serving).
+- Ability to interpret model metrics and suggest improvements.
+- Extension of the project with new features or models.
+- Documentation of changes and rationale in commit messages or a personal report.
+
+### Prerequisites
+- Basic Python programming.
+- Familiarity with data structures (lists, dictionaries).
+- Understanding of basic statistics (mean, variance).
+- No prior ML experience required, but curiosity for experimentation is essential.
+
+### Timeline and Milestones
+- **Week 1**: Data exploration and cleaning.
+- **Week 2**: Feature engineering and model training.
+- **Week 3**: API development and testing.
+- **Week 4**: Deployment, extensions, and final report.
+
+## Explanation of Key Methods
+
+This project demonstrates core data engineering and machine learning methods for predicting building energy consumption. Below is an overview of the major approaches used, aligned with standard practices in predictive analytics.
+
+### 1. Data Cleaning and Preprocessing
+- **Method**: Filtering invalid data, handling missing values, and type conversion.
+- **Tools**: Pandas for data manipulation.
+- **Why**: Ensures data quality; removes outliers and inconsistencies that could bias the model.
+- **Implementation**: In `data_processing.py`, functions like `safe_float` convert strings to numbers, and filters exclude non-positive energy values.
+
+### 2. Feature Engineering
+- **Method**: Creating derived features from raw data, such as logarithmic transformations, binary flags, and categorical encoding.
+- **Tools**: NumPy for mathematical operations.
+- **Why**: Improves model performance by capturing non-linear relationships and domain knowledge (e.g., building size impacts).
+- **Implementation**: Log-transform surface area, calculate energy percentages, and encode building types as binary flags.
+
+### 3. Model Training and Evaluation
+- **Method**: Supervised regression with Random Forest, hyperparameter optimization via randomized search, and cross-validation.
+- **Tools**: Scikit-learn for modeling and metrics.
+- **Why**: Random Forest handles non-linear data well; evaluation metrics (R², MAE, RMSE) assess accuracy and error.
+- **Implementation**: In `model_training.py`, train/test split (80/20), RandomizedSearchCV for tuning, and metrics calculation.
+
+### 4. Model Packaging and Serving
+- **Method**: Export model to BentoML, define API with input validation, and serve via HTTP.
+- **Tools**: BentoML for ML serving, Pydantic for schemas.
+- **Why**: Enables production deployment; validation prevents invalid predictions.
+- **Implementation**: In `service.py`, EnergyService class with predict endpoint; schemas ensure correct input format.
+
+### 5. Deployment and Containerization
+- **Method**: Package application in Docker for portability.
+- **Tools**: Docker for containers.
+- **Why**: Ensures consistent environments across systems; simplifies scaling.
+- **Implementation**: Dockerfile builds image with dependencies; runs BentoML service in production mode.
+
+These methods form a robust foundation for environmental data projects, emphasizing reproducibility and scalability.
+
+## Repository structure
+
+- `README.md` — this student guide and workflow reference
+- `pyproject.toml` / `requirements.txt` — dependency definitions
+- `Dockerfile` — container configuration for deployment
+- `bentofile.yaml` — BentoML packaging configuration
+- `data/raw/` — original raw Seattle dataset
+- `data/processed/` — processed dataset ready for modeling
+- `src/seattle_energy/` — modular pipeline code
+  - `data_processing.py` — data cleaning and feature engineering
+  - `model_training.py` — training, evaluation, and BentoML export
+  - `service.py` — BentoML service and validation logic
+- `scripts/` — runnable entry points for each stage
+  - `prepare_data.py` — build processed data
+  - `train_model.py` — train the model and save it
+  - `run_service.py` — launch the API service
+  - `test_api.py` — example prediction client
+
+## Step-by-step student workflow
+
+### 1. Install dependencies
+
+The recommended approach is Poetry:
+
+```bash
+poetry install
+```
+
+If you prefer pip:
+
+```bash
+python -m pip install -r requirements.txt
+python -m pip install -e .
+```
+
+### 2. Prepare the dataset
+
+Generate the cleaned dataset from raw Seattle energy data:
+
+```bash
+python scripts/prepare_data.py
+```
+
+After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
+
+### 3. Train a model
+
+Train and evaluate the model, then save it to BentoML:
+
+```bash
+python scripts/train_model.py
+```
+
+This step performs:
+- train/test split
+- randomized hyperparameter search
+- calculation of R², MAE, and RMSE
+- saving the trained model to the BentoML store
+
+### 4. Serve the model as an API
+
+Start the BentoML service:
+
+```bash
+python scripts/run_service.py
+```
+
+The service runs on port `3000` and exposes:
+- `POST /predict` — prediction endpoint
+- `GET /ping` — health check
+
+### 5. Verify the API
+
+Send a sample request to the live service:
+
+```bash
+python scripts/test_api.py
+```
+
+This example shows the expected input format and how to consume predictions.
+
+## Extending the exercise
+
+Once the base pipeline works, students should try:
+- creating new features in `src/seattle_energy/data_processing.py`
+- comparing different regressors such as `LinearRegression`, `GradientBoostingRegressor`, or `XGBRegressor`
+- improving validation rules and schema checks
+- tuning hyperparameters more systematically
+- adding a new API endpoint for model metadata or feature explanation
+- packaging the service with `bentoml build`
+
+## Concepts and vocabulary
+
+Use these terms while you work:
+- raw data
+- feature engineering
+- target variable
+- regression model
+- train/test split
+- evaluation metrics
+- BentoML service
+- API endpoint
+- schema validation
+- model export
+
+## BentoML and deployment
+
+The model is exported using BentoML in `src/seattle_energy/model_training.py`. The service is defined in `src/seattle_energy/service.py`.
+
+To build a Bento archive manually:
+
+```bash
+bentoml build
+```
+
+Then serve it with:
+
+```bash
+bentoml serve seattle_energy.service:EnergyService --port 3000
+```
+
+## API Methods and Cloud Deployment
+
+This section provides methods for working with the API, from local testing to cloud deployment. These approaches help students understand API development and production scaling.
+
+### Local API Usage with BentoML
+
+BentoML is used to create a simple, validated API for predictions. To run the API locally:
+
+1. **Start the service**:
    ```bash
-   poetry run python scripts_bento/save_model.py
+   python scripts/run_service.py
    ```
-   Le modele est stocke dans le Bento store sous le tag `random_forest_energy` avec les noms de colonnes utilises.
+   Or directly:
+   ```bash
+   bentoml serve seattle_energy.service:EnergyService --port 3000
+   ```
 
-## Service BentoML
-- Lancer le serveur local avec rechargement :
-  ```bash
-  poetry run bentoml serve scripts_bento.service:EnergyService --reload
-  ```
-- Endpoints exposes :
-  - `POST /predict` : JSON avec la cle `data`. Exemple :
-    ```json
-    {
-      "data": {
-        "BuildingAge": 10,
-        "log_surface": 3.6,
-        "has_parking": 1,
-        "Use_Retail": 1,
-        "Use_Office": 0,
-        "Use_Other": 0,
-        "Use_Warehouse": 0,
-        "Use_Unknown": 0
-      }
-    }
-    ```
-    Retour : `{ "prediction": <float> }` apres validation Pydantic/Pandera et mapping des colonnes (`Use_Retail` -> `Use_Retail Store`, etc.).
-  - `GET /ping` : verifie que le service repond.
-  - `GET /model_info` : nom/version du modele et liste des features attendues.
-- Construire un bento reproductible : `poetry run bentoml build` (utilise `bentofile.yaml`).
+2. **Available endpoints**:
+   - `GET /ping`: Health check (returns a status message).
+   - `POST /predict`: Prediction endpoint. Send JSON data for energy forecast.
 
-## Tests rapides
-- Verifier la prediction hors API : `poetry run python scripts_bento/test_save_model.py`.
-- Tester l endpoint `/predict` une fois le serveur lance : `poetry run python scripts_bento/test_api.py`.
+3. **Example request** (using `scripts/test_api.py` or tools like Postman):
+   ```json
+   {
+     "log_surface": 8.5,
+     "percent_electricity": 0.7,
+     "Use_Office": 1,
+     "Use_Hotel": 0
+     // Include other binary flags for building types
+   }
+   ```
+   Response: A JSON with the predicted energy value.
 
-## Notes
-- Les scripts supposent que le fichier `data/feature_engineered_cleaned_for_bento.csv` est present. Regenerer via les notebooks si besoin.
-- L environnement virtuel `.venv/` est optionnel si vous utilisez Poetry; sinon installez les dependances via `pip` en lisant `pyproject.toml`.
+4. **Validation**: The API uses Pydantic schemas to validate inputs. Invalid data returns a 400 error.
+
+5. **Extending the API**: Add new endpoints in `src/seattle_energy/service.py` using `@bentoml.api`. For example, add a GET endpoint for model metadata.
+
+### Containerized Deployment with Docker
+
+For production-like testing:
+
+1. **Build the image**:
+   ```bash
+   docker build -t seattle-energy-app .
+   ```
+
+2. **Run the container**:
+   ```bash
+   docker run -p 3000:3000 seattle-energy-app
+   ```
+
+The API is now accessible on port 3000, isolated in a container.
+
+### Cloud Deployment with Google Cloud Run
+
+For global access and scalability, deploy to Google Cloud Platform (GCP). This uses serverless containers.
+
+#### Prerequisites
+- Google Cloud account (free tier available).
+- Install Google Cloud CLI (`gcloud`): Download from https://cloud.google.com/sdk/docs/install.
+- Enable APIs: Cloud Run and Container Registry.
+
+#### Steps
+1. **Authenticate and set project**:
+   ```bash
+   gcloud auth login
+   gcloud config set project YOUR_PROJECT_ID
+   gcloud services enable run.googleapis.com containerregistry.googleapis.com
+   ```
+
+2. **Build and push Docker image to GCR**:
+   ```bash
+   docker tag seattle-energy-app gcr.io/YOUR_PROJECT_ID/seattle-energy-app
+   docker push gcr.io/YOUR_PROJECT_ID/seattle-energy-app
+   ```
+
+3. **Deploy to Cloud Run**:
+   ```bash
+   gcloud run deploy seattle-energy-app \
+     --image gcr.io/YOUR_PROJECT_ID/seattle-energy-app \
+     --platform managed \
+     --port 3000 \
+     --allow-unauthenticated
+   ```
+   GCP provides a public URL (e.g., `https://seattle-energy-app-xxxx.run.app`).
+
+4. **Test the deployed API**:
+   Use the same JSON payload with the GCP URL:
+   ```bash
+   curl -X POST https://seattle-energy-app-xxxx.run.app/predict \
+     -H "Content-Type: application/json" \
+     -d '{"log_surface": 8.5, "percent_electricity": 0.7, "Use_Office": 1, "Use_Hotel": 0}'
+   ```
+
+#### Pedagogical Benefits
+- **Local API**: Teaches API basics and validation.
+- **Docker**: Introduces containerization for portability.
+- **Cloud**: Demonstrates serverless deployment, scalability, and integration with GCP services (e.g., Cloud Storage for data).
+
+Experiment with these methods to understand production ML APIs.
+
+## Important note for students
+
+This repository is intentionally focused on process and learning. It does not include final numeric results, model scores, or precomputed conclusions. The value comes from:
+- running the workflow yourself
+- observing the output
+- comparing choices
+- explaining what changes improved the model
+
+## Clean deliverable
+
+The repository now contains only essential files for the case study:
+- source code
+- configuration files
+- dataset
+- student scripts
+
+Any temporary or local environment files should be ignored and not committed.

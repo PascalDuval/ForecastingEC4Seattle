@@ -1,19 +1,39 @@
-# Environnement virtuel Poetry
-.venv/
-
-# Fichiers Python compilés
+# Python artifacts
 __pycache__/
 *.pyc
+*.pyo
+*.pyd
+*.pkl
+*.joblib
+*.sqlite3
 
-# Fichiers Jupyter
+# Virtual environments
+.venv/
+.venv-1/
+venv/
+ENV/
+env/
+
+# BentoML state
+.bento/
+
+# Jupyter
 .ipynb_checkpoints/
 
-# Données lourdes ou sensibles
+# Docker
+.dockerignore
 
+# OS files
+.DS_Store
+Thumbs.db
 
-# Vieux fichiers
-old/
-
-# Dossiers temporaires
+# Temp folders
 .cache/
 logs/
+
+# Local editor files
+.vscode/
+
+# Legacy notebooks and local archives
+*.ipynb
+old/
