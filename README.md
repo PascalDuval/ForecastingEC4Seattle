@@ -2,6 +2,8 @@
 
 This repository is a learning project for predicting energy consumption in Seattle buildings. It is designed to help students run a complete data science workflow, verify results, and innovate with new models and APIs.
 
+This exercise was originally built using Seattle data, but it is intended to be adapted by students for their own energy consumption datasets. For example, Auroville students can reuse the same pipeline with local data and use the exercise to explore regional and ecological energy issues.
+
 ## Purpose and scope
 
 This case study aims to help every student:
