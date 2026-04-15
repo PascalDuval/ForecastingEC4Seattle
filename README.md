@@ -110,11 +110,12 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `data_processing.py` — data cleaning and feature engineering
   - `model_training.py` — training, evaluation, and BentoML export
   - `service.py` — BentoML service and validation logic
-- `scripts/` — runnable entry points for each stage
-  - `prepare_data.py` — build processed data
-  - `train_model.py` — train the model and save it
-  - `run_service.py` — launch the API service
-  - `test_api.py` — example prediction client
+- `notebooks/` — interactive notebooks for each stage
+  - `01_prepare_data.ipynb` — build processed data step by step
+  - `02_train_model.ipynb` — train the model and save it in BentoML
+  - `03_run_service.ipynb` — explain and test the BentoML service
+  - `04_test_api.ipynb` — exercise the prediction endpoint
+- `old_scripts/` — archived original script wrappers for reference
 
 ## Step-by-step student workflow
 
@@ -133,51 +134,58 @@ python -m pip install -r requirements.txt
 python -m pip install -e .
 ```
 
-### 2. Prepare the dataset
+### 2. Install Jupyter Notebook
 
-Generate the cleaned dataset from raw Seattle energy data:
+To run the notebooks, install Jupyter Notebook with Poetry or pip:
 
 ```bash
-python scripts/prepare_data.py
+poetry run python -m notebook
 ```
+
+Or with pip:
+
+```bash
+python -m pip install notebook
+python -m notebook
+```
+
+### 3. Open the notebooks
+
+Open the notebook server and launch the notebooks inside the `notebooks/` folder. The main workflow is:
+- `notebooks/01_prepare_data.ipynb`
+- `notebooks/02_train_model.ipynb`
+- `notebooks/03_run_service.ipynb`
+- `notebooks/04_test_api.ipynb`
+
+### 4. Prepare the dataset
+
+Use `notebooks/01_prepare_data.ipynb` to load raw Seattle data, build model-ready features, and save the processed dataset.
 
 After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
 
-### 3. Train a model
+### 5. Train a model
 
-Train and evaluate the model, then save it to BentoML:
+Use `notebooks/02_train_model.ipynb` to train and evaluate the model, then save it to BentoML.
 
-```bash
-python scripts/train_model.py
-```
-
-This step performs:
+This notebook performs:
 - train/test split
 - randomized hyperparameter search
 - calculation of R², MAE, and RMSE
 - saving the trained model to the BentoML store
 
-### 4. Serve the model as an API
+### 6. Serve the model as an API
 
-Start the BentoML service:
-
-```bash
-python scripts/run_service.py
-```
+Use `notebooks/03_run_service.ipynb` to review the BentoML service and learn how to start it. The notebook shows the service command and example request payload.
 
 The service runs on port `3000` and exposes:
 - `POST /predict` — prediction endpoint
 - `GET /ping` — health check
 
-### 5. Verify the API
+### 7. Verify the API
 
-Send a sample request to the live service:
+Use `notebooks/04_test_api.ipynb` to send a sample request to the live service and inspect the response.
 
-```bash
-python scripts/test_api.py
-```
-
-This example shows the expected input format and how to consume predictions.
+This notebook shows the expected input format and how to consume predictions.
 
 ## Extending the exercise
 
@@ -229,10 +237,6 @@ BentoML is used to create a simple, validated API for predictions. To run the AP
 
 1. **Start the service**:
    ```bash
-   python scripts/run_service.py
-   ```
-   Or directly:
-   ```bash
    bentoml serve seattle_energy.service:EnergyService --port 3000
    ```
 
@@ -240,7 +244,7 @@ BentoML is used to create a simple, validated API for predictions. To run the AP
    - `GET /ping`: Health check (returns a status message).
    - `POST /predict`: Prediction endpoint. Send JSON data for energy forecast.
 
-3. **Example request** (using `scripts/test_api.py` or tools like Postman):
+3. **Example request** (using `notebooks/04_test_api.ipynb` or tools like Postman):
    ```json
    {
      "log_surface": 8.5,

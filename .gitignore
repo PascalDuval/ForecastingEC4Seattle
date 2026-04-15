@@ -35,5 +35,7 @@ logs/
 .vscode/
 
 # Legacy notebooks and local archives
-*.ipynb
 old/
+
+# docs
+doc/
