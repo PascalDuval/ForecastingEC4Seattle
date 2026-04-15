@@ -183,7 +183,9 @@ Use `notebooks/01_clean_data.ipynb` to clean the filtered dataset, remove invali
 
 ### 6. Feature engineering
 
-Use `notebooks/02_feature_engineering.ipynb` to build model-ready features from the cleaned dataset and save the processed dataset.
+Use `notebooks/02_feature_engineering.ipynb` to analyze derived metrics from the cleaned dataset, compute electricity share and log-transformed features, detect important outliers, and save the final model-ready dataset.
+
+After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
 
 After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
 
