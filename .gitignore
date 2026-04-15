@@ -34,6 +34,9 @@ logs/
 # Local editor files
 .vscode/
 
+# Source code (local only, not on GitHub)
+src/
+
 # Legacy notebooks and local archives
 old/
 old_scripts/

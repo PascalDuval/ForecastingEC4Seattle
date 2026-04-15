@@ -119,6 +119,15 @@ These methods form a robust foundation for environmental data projects, emphasiz
 
 ## Step-by-step student workflow
 
+**Note**: This repository provides a skeleton framework for the exercise. Students must adapt the notebooks and modules to their own datasets and requirements. For example:
+- Modify data processing to handle local energy consumption data (e.g., from Auroville or other regions).
+- Add ecological metrics like carbon footprint calculations or renewable energy indicators.
+- Experiment with different models (e.g., add regression variants or neural networks).
+- Customize API endpoints for specific use cases, such as batch predictions or model explainability.
+- Ensure data privacy and compliance with local regulations.
+
+The notebooks guide you through the process, but creativity and adaptation are key to mastering the concepts.
+
 ### 1. Install dependencies
 
 The recommended approach is Poetry:
