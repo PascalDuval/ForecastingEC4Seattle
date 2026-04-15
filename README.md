@@ -115,7 +115,6 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `02_train_model.ipynb` — train the model and save it in BentoML
   - `03_run_service.ipynb` — explain and test the BentoML service
   - `04_test_api.ipynb` — exercise the prediction endpoint
-- `old_scripts/` — archived original script wrappers (ignored by Git, not on GitHub)
 
 ## Step-by-step student workflow
 
