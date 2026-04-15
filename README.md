@@ -179,8 +179,10 @@ Use `notebooks/02_train_model.ipynb` to train and evaluate the model, then save 
 
 This notebook performs:
 - train/test split
-- randomized hyperparameter search
+- baseline model evaluation with `LinearRegression`
+- randomized hyperparameter search for a Random Forest model
 - calculation of R², MAE, and RMSE
+- comparison between baseline and advanced model
 - saving the trained model to the BentoML store
 
 ### 6. Serve the model as an API
