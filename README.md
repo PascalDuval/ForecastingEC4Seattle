@@ -2,20 +2,20 @@
 
 This repository is a learning project for predicting energy consumption in Seattle buildings. It is designed to help students run a complete data science workflow, verify results, and innovate with new models and APIs.
 
-This exercise was originally built using Seattle data, but it is intended to be adapted by students for their own energy consumption datasets. For example, Auroville students can reuse the same pipeline with local data and use the exercise to explore regional and ecological energy issues.
+This case study was originally built using Seattle data, but it is intended to be adapted by students for their own energy consumption datasets. For example, students in other regions can reuse the same pipeline with local data and use the exercise to explore regional and ecological energy questions.
 
-## Purpose and scope
+## Purpose and Scope
 
 This case study aims to help every student:
 - transform raw energy data into model-ready features
 - train and evaluate a regression model
-- package the model as a production-ready service
+- package the model as a production-ready service with BentoML
 - serve predictions through an API
 - build confidence in the complete ML lifecycle
 
 > No final model metrics or numeric results are provided here. Students must run the pipeline themselves and interpret the outputs.
 
-## Learning objectives
+## Learning Objectives
 
 By working with this project, students should be able to:
 - prepare raw data for machine learning
@@ -45,7 +45,7 @@ This case study is part of a data engineering and machine learning curriculum fo
 - Version control and collaborative development with Git and GitHub.
 
 ### Assessment and Evaluation
-- Successful execution of the full pipeline (data preparation, training, serving).
+- Successful execution of the full pipeline (data preparation, training, service).
 - Ability to interpret model metrics and suggest improvements.
 - Extension of the project with new features or models.
 - Documentation of changes and rationale in commit messages or a personal report.
@@ -347,6 +347,75 @@ For global access and scalability, deploy to Google Cloud Platform (GCP). This u
 - **Cloud**: Demonstrates serverless deployment, scalability, and integration with GCP services (e.g., Cloud Storage for data).
 
 Experiment with these methods to understand production ML APIs.
+
+## Commands to run the full workflow
+
+Below are the key commands to run the complete pipeline. Make sure dependencies are installed and the Python environment is configured.
+
+### 1. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 2. Exploratory analysis (Notebook 00)
+Open and run `notebooks/00_exploratory_analysis.ipynb` in Jupyter to inspect the raw data and create the filtered dataset.
+
+### 3. Data cleaning (Notebook 01)
+Open and run `notebooks/01_clean_data.ipynb` to clean the filtered dataset.
+
+### 4. Feature engineering (Notebook 02)
+Open and run `notebooks/02_feature_engineering.ipynb` to create model-ready features.
+
+### 5. Model training (Notebook 03)
+Open and run `notebooks/03_train_model.ipynb` to train and save the model.
+
+### 6. Run the API service (Notebook 04)
+Open `notebooks/04_run_service.ipynb` and run the cell to start the BentoML service:
+```bash
+bentoml serve seattle_energy.service:EnergyService --port 3000
+```
+
+### 7. Test the API (Notebook 05)
+Open and run `notebooks/05_test_api.ipynb` to test the API with example requests.
+
+### Alternative commands for direct script execution
+If you prefer running Python scripts instead of notebooks:
+
+- Data cleaning:
+```bash
+python -c "from src.seattle_energy.data_processing import clean_data; clean_data('data/2016_Building_Energy_Benchmarking_Purge.csv', 'data/2016_Building_Energy_Benchmarking_ML.csv')"
+```
+
+- Feature engineering:
+```bash
+python -c "from src.seattle_energy.data_processing import build_feature_dataframe; df = build_feature_dataframe('data/2016_Building_Energy_Benchmarking_ML.csv'); df.to_csv('data/processed/feature_engineered_cleaned_for_bento.csv', index=False)"
+```
+
+- Model training:
+```bash
+python -c "from src.seattle_energy.model_training import train_and_save_model; train_and_save_model('data/processed/feature_engineered_cleaned_for_bento.csv')"
+```
+
+- Run the service:
+```bash
+bentoml serve src/seattle_energy/service.py:EnergyService --port 3000
+```
+
+- Test the API:
+```bash
+python src/seattle_energy/test_api.py
+```
+
+### Build and deploy with Docker
+- Build the image:
+```bash
+docker build -t seattle-energy .
+```
+
+- Run the container:
+```bash
+docker run -p 3000:3000 seattle-energy
+```
 
 ## Important note for students
 
