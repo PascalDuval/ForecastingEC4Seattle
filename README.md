@@ -111,7 +111,8 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `model_training.py` — training, evaluation, and BentoML export
   - `service.py` — BentoML service and validation logic
 - `notebooks/` — interactive notebooks for each stage
-  - `01_prepare_data.ipynb` — load raw data, explore features, and build the cleaned dataset
+  - `00_exploratory_analysis.ipynb` — inspect the raw dataset, semantic column meanings, and initial data selection logic
+  - `01_prepare_data.ipynb` — prepare and clean the dataset for modeling
   - `02_train_model.ipynb` — train a baseline model, compare with a Random Forest, and save the BentoML model
   - `03_run_service.ipynb` — start the BentoML API service and verify endpoints with live requests
   - `04_test_api.ipynb` — test the prediction endpoint with example payloads
@@ -162,12 +163,17 @@ python -m notebook
 ### 3. Open the notebooks
 
 Open the notebook server and launch the notebooks inside the `notebooks/` folder. The main workflow is:
+- `notebooks/00_exploratory_analysis.ipynb`
 - `notebooks/01_prepare_data.ipynb`
 - `notebooks/02_train_model.ipynb`
 - `notebooks/03_run_service.ipynb`
 - `notebooks/04_test_api.ipynb`
 
-### 4. Prepare the dataset
+### 4. Explore the raw dataset
+
+Use `notebooks/00_exploratory_analysis.ipynb` first to inspect the raw Seattle dataset, understand the main column groups, check missing values, and create a filtered purge dataset for the data preparation step.
+
+### 5. Prepare the dataset
 
 Use `notebooks/01_prepare_data.ipynb` to load raw Seattle data, build model-ready features, and save the processed dataset.
 
