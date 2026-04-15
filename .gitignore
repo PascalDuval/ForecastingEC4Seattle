@@ -36,6 +36,7 @@ logs/
 
 # Legacy notebooks and local archives
 old/
+old_scripts/
 
 # docs
 doc/
