@@ -112,10 +112,11 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `service.py` — BentoML service and validation logic
 - `notebooks/` — interactive notebooks for each stage
   - `00_exploratory_analysis.ipynb` — inspect the raw dataset, semantic column meanings, and initial data selection logic
-  - `01_prepare_data.ipynb` — prepare and clean the dataset for modeling
-  - `02_train_model.ipynb` — train a baseline model, compare with a Random Forest, and save the BentoML model
-  - `03_run_service.ipynb` — start the BentoML API service and verify endpoints with live requests
-  - `04_test_api.ipynb` — test the prediction endpoint with example payloads
+  - `01_clean_data.ipynb` — clean the filtered dataset, remove invalid rows, deduplicate, and detect outliers
+  - `02_prepare_data.ipynb` — build model-ready features from the cleaned dataset
+  - `03_train_model.ipynb` — train a baseline model, compare with a Random Forest, and save the BentoML model
+  - `04_run_service.ipynb` — start the BentoML API service and verify endpoints with live requests
+  - `05_test_api.ipynb` — test the prediction endpoint with example payloads
 
 > The local folder `old-projet/` contains reference notebooks and files that are intentionally ignored on GitHub. The public student workflow is in `notebooks/`.
 
@@ -164,22 +165,27 @@ python -m notebook
 
 Open the notebook server and launch the notebooks inside the `notebooks/` folder. The main workflow is:
 - `notebooks/00_exploratory_analysis.ipynb`
-- `notebooks/01_prepare_data.ipynb`
-- `notebooks/02_train_model.ipynb`
-- `notebooks/03_run_service.ipynb`
-- `notebooks/04_test_api.ipynb`
+- `notebooks/01_clean_data.ipynb`
+- `notebooks/02_prepare_data.ipynb`
+- `notebooks/03_train_model.ipynb`
+- `notebooks/04_run_service.ipynb`
+- `notebooks/05_test_api.ipynb`
 
 ### 4. Explore the raw dataset
 
 Use `notebooks/00_exploratory_analysis.ipynb` first to inspect the raw Seattle dataset, understand the main column groups, check missing values, and create a filtered purge dataset for the data preparation step.
 
-### 5. Prepare the dataset
+### 5. Clean the filtered dataset
 
-Use `notebooks/01_prepare_data.ipynb` to load raw Seattle data, build model-ready features, and save the processed dataset.
+Use `notebooks/01_clean_data.ipynb` to clean the filtered dataset, remove invalid and duplicate rows, and create a reliable model dataset. This notebook also detects combined energy and surface outliers and saves them to `data/outliers_surface_energy.csv`.
+
+### 6. Prepare the dataset
+
+Use `notebooks/02_prepare_data.ipynb` to build model-ready features from the cleaned dataset and save the processed dataset.
 
 After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
 
-### 5. Train a model
+### 7. Train a model
 
 Use `notebooks/02_train_model.ipynb` to train and evaluate the model, then save it to BentoML.
 
