@@ -400,7 +400,17 @@ python -c "from src.seattle_energy.model_training import train_and_save_model; t
 ```bash
 bentoml serve src/seattle_energy/service.py:EnergyService --port 3000
 ```
+## Testing
 
+To verify that all dependencies and modules are correctly installed and importable, run the import test:
+
+```bash
+python tests/test_imports.py
+```
+
+This script checks that the key modules (`data_processing`, `model_training`, `service`) can be imported without errors. If successful, it prints "All imports successful". If there are issues, it will display the specific import error.
+
+Run this test after installing dependencies to ensure the environment is set up correctly before running the notebooks or scripts.
 - Test the API:
 ```bash
 python src/seattle_energy/test_api.py
