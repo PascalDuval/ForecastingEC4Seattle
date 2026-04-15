@@ -37,6 +37,9 @@ logs/
 # Source code (local only, not on GitHub)
 src/
 
+# Local project references ignored on GitHub
+old-projet/
+
 # Legacy notebooks and local archives
 old/
 old_scripts/

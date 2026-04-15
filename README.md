@@ -116,6 +116,8 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `03_run_service.ipynb` — explain and test the BentoML service
   - `04_test_api.ipynb` — exercise the prediction endpoint
 
+> The local folder `old-projet/` contains reference notebooks and files that are intentionally ignored on GitHub. The public student workflow is in `notebooks/`.
+
 ## Step-by-step student workflow
 
 **Note**: This repository provides a skeleton framework for the exercise. Students must adapt the notebooks and modules to their own datasets and requirements. For example:
