@@ -111,10 +111,10 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `model_training.py` — training, evaluation, and BentoML export
   - `service.py` — BentoML service and validation logic
 - `notebooks/` — interactive notebooks for each stage
-  - `01_prepare_data.ipynb` — build processed data step by step
-  - `02_train_model.ipynb` — train the model and save it in BentoML
-  - `03_run_service.ipynb` — explain and test the BentoML service
-  - `04_test_api.ipynb` — exercise the prediction endpoint
+  - `01_prepare_data.ipynb` — load raw data, explore features, and build the cleaned dataset
+  - `02_train_model.ipynb` — train a baseline model, compare with a Random Forest, and save the BentoML model
+  - `03_run_service.ipynb` — start the BentoML API service and verify endpoints with live requests
+  - `04_test_api.ipynb` — test the prediction endpoint with example payloads
 
 > The local folder `old-projet/` contains reference notebooks and files that are intentionally ignored on GitHub. The public student workflow is in `notebooks/`.
 
@@ -187,17 +187,13 @@ This notebook performs:
 
 ### 6. Serve the model as an API
 
-Use `notebooks/03_run_service.ipynb` to review the BentoML service and learn how to start it. The notebook shows the service command and example request payload.
-
-The service runs on port `3000` and exposes:
+Use `notebooks/03_run_service.ipynb` to review the BentoML service and learn how to start it. The notebook explains how to launch the service in a separate terminal and how to call the endpoints from Python. The service runs on port `3000` and exposes:
 - `POST /predict` — prediction endpoint
 - `GET /ping` — health check
 
 ### 7. Verify the API
 
-Use `notebooks/04_test_api.ipynb` to send a sample request to the live service and inspect the response.
-
-This notebook shows the expected input format and how to consume predictions.
+Use `notebooks/04_test_api.ipynb` to send a sample request to the live service and inspect the response. This notebook shows the expected input format and how to consume predictions in a reproducible way.
 
 ## Extending the exercise
 
