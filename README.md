@@ -106,14 +106,14 @@ These methods form a robust foundation for environmental data projects, emphasiz
 - `bentofile.yaml` — BentoML packaging configuration
 - `data/raw/` — original raw Seattle dataset
 - `data/processed/` — processed dataset ready for modeling
-- `src/seattle_energy/` — modular pipeline code
+- `src/seattle_energy/` — modular pipeline code and shared routines
   - `data_processing.py` — data cleaning and feature engineering
   - `model_training.py` — training, evaluation, and BentoML export
   - `service.py` — BentoML service and validation logic
 - `notebooks/` — interactive notebooks for each stage
   - `00_exploratory_analysis.ipynb` — inspect the raw dataset, semantic column meanings, and initial data selection logic
   - `01_clean_data.ipynb` — clean the filtered dataset, remove invalid rows, deduplicate, and detect outliers
-  - `02_prepare_data.ipynb` — build model-ready features from the cleaned dataset
+  - `02_feature_engineering.ipynb` — build model-ready features from the cleaned dataset
   - `03_train_model.ipynb` — train a baseline model, compare with a Random Forest, and save the BentoML model
   - `04_run_service.ipynb` — start the BentoML API service and verify endpoints with live requests
   - `05_test_api.ipynb` — test the prediction endpoint with example payloads
@@ -166,7 +166,7 @@ python -m notebook
 Open the notebook server and launch the notebooks inside the `notebooks/` folder. The main workflow is:
 - `notebooks/00_exploratory_analysis.ipynb`
 - `notebooks/01_clean_data.ipynb`
-- `notebooks/02_prepare_data.ipynb`
+- `notebooks/02_feature_engineering.ipynb`
 - `notebooks/03_train_model.ipynb`
 - `notebooks/04_run_service.ipynb`
 - `notebooks/05_test_api.ipynb`
@@ -179,9 +179,11 @@ Use `notebooks/00_exploratory_analysis.ipynb` first to inspect the raw Seattle d
 
 Use `notebooks/01_clean_data.ipynb` to clean the filtered dataset, remove invalid and duplicate rows, and create a reliable model dataset. This notebook also detects combined energy and surface outliers and saves them to `data/outliers_surface_energy.csv`.
 
-### 6. Prepare the dataset
+> The notebooks can reuse shared routines from `src/seattle_energy/` either when the package is installed in the Python environment or by adding `src` to `sys.path` in the notebook.
 
-Use `notebooks/02_prepare_data.ipynb` to build model-ready features from the cleaned dataset and save the processed dataset.
+### 6. Feature engineering
+
+Use `notebooks/02_feature_engineering.ipynb` to build model-ready features from the cleaned dataset and save the processed dataset.
 
 After this step, `data/processed/feature_engineered_cleaned_for_bento.csv` is created.
 
