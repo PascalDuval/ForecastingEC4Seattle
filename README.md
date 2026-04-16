@@ -26,6 +26,56 @@ By working with this project, students should be able to:
 - verify service behavior with client requests
 - extend the pipeline with new models, features, or endpoints
 
+## Quick Start Guide
+
+### 1. Clone the Repository
+To get started, clone this repository to your local machine:
+
+```bash
+git clone https://github.com/PascalDuval/ForecastingEC4Seattle.git
+cd ForecastingEC4Seattle
+```
+
+### 2. Set Up Your Environment
+This project requires Python 3.11 or higher. We recommend using a virtual environment to manage dependencies.
+
+#### Option 1: Using Poetry (Recommended for Students)
+Poetry is a modern dependency manager that makes it easy to install and manage packages.
+
+- Install Poetry: Follow the instructions at [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
+- Install dependencies:
+  ```bash
+  poetry install
+  ```
+- Activate the virtual environment:
+  ```bash
+  poetry shell
+  ```
+
+#### Option 2: Using pip and venv
+If you prefer using pip, you can create a virtual environment manually.
+
+- Create a virtual environment:
+  ```bash
+  python -m venv .venv
+  ```
+- Activate the virtual environment:
+  - On Windows: `.venv\Scripts\activate`
+  - On macOS/Linux: `source .venv/bin/activate`
+- Install dependencies:
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+### 3. Run the Notebooks
+Open Jupyter Notebook and follow the workflow in the `notebooks/` folder:
+
+```bash
+jupyter notebook
+```
+
+Start with `notebooks/00_exploratory_analysis.ipynb` and proceed through the numbered notebooks.
+
 ## Syllabus
 
 This case study is part of a data engineering and machine learning curriculum focused on real-world applications in environmental prediction (inspired by Seattle emissions and energy data). The syllabus covers:
@@ -98,12 +148,71 @@ This project demonstrates core data engineering and machine learning methods for
 
 These methods form a robust foundation for environmental data projects, emphasizing reproducibility and scalability.
 
+## Deployment with Docker and BentoML
+
+Once you've trained your model and built the API, you can deploy it in a production-like environment using Docker and BentoML. This section explains what these tools do and how to use them.
+
+### Why Docker and BentoML?
+- **BentoML**: A framework for serving machine learning models as APIs. It packages your model, code, and dependencies into a "bento" (a deployable unit) that can run predictions via HTTP requests. This makes your ML model accessible like a web service.
+- **Docker**: A tool for containerization. It packages your entire application (including BentoML) into a lightweight, portable container that runs consistently on any system. This ensures your model works the same way everywhere, without "it works on my machine" issues.
+
+Together, they allow you to turn your trained model into a real API that can be deployed on servers, clouds, or shared with others.
+
+### Deployment Steps
+1. **Train and Save Your Model**: Run the notebooks to train your model and save it with BentoML (done in `03_train_model.ipynb`).
+2. **Build the Bento**: BentoML automatically packages your model based on `bentofile.yaml`.
+3. **Containerize with Docker**: Build a Docker image that includes your bento and all dependencies.
+4. **Run the Container**: Start the API service inside the container.
+
+### Commands to Deploy
+After completing the notebooks:
+
+1. **Build the BentoML service** (this packages your model):
+   ```bash
+   bentoml build
+   ```
+
+2. **Build the Docker image** (this creates a container with your service):
+   ```bash
+   docker build -t seattle-energy-api .
+   ```
+
+3. **Run the Docker container** (this starts the API on port 3000):
+   ```bash
+   docker run -p 3000:3000 seattle-energy-api
+   ```
+
+4. **Test the API** (send a prediction request):
+   ```bash
+   curl -X POST "http://localhost:3000/predict" \
+        -H "Content-Type: application/json" \
+        -d '{
+          "log_surface": 11.2,
+          "percent_electricity": 45.0,
+          "has_parking": 1,
+          "BuildingAge": 45,
+          "surface_per_floor": 9000.0,
+          "Use_Hotel": 0,
+          "Use_Office": 1,
+          "Use_Retail_Store": 0,
+          "Use_Other": 0,
+          "Use_Non_Refrigerated_Warehouse": 0,
+          "Use_K12_School": 0,
+          "Use_Medical_Office": 0,
+          "Use_Worship_Facility": 0,
+          "Use_Unknown": 0
+        }'
+   ```
+
+> **Note for Students**: Docker requires installation on your machine. If you don't have Docker, you can still run the BentoML service directly with `bentoml serve seattle_energy.service:EnergyService --port 3000` after training the model.
+
 ## Repository structure
 
 - `README.md` — this student guide and workflow reference
-- `pyproject.toml` / `requirements.txt` — dependency definitions
-- `Dockerfile` — container configuration for deployment
-- `bentofile.yaml` — BentoML packaging configuration
+- `pyproject.toml` / `requirements.txt` — dependency definitions for Python packages
+- **Deployment Files** (for production API):
+  - `Dockerfile` — Docker container configuration for running the API in production
+  - `bentofile.yaml` — BentoML configuration for packaging the ML model and service
 - `data/raw/` — original raw Seattle dataset
 - `data/processed/` — processed dataset ready for modeling
 - `src/seattle_energy/` — core reusable pipeline modules shared by notebooks and service code
@@ -131,46 +240,6 @@ These methods form a robust foundation for environmental data projects, emphasiz
 - Ensure data privacy and compliance with local regulations.
 
 The notebooks guide you through the process, but creativity and adaptation are key to mastering the concepts.
-
-### 1. Install dependencies
-
-The recommended approach is Poetry:
-
-```bash
-poetry install
-```
-
-If you prefer pip:
-
-```bash
-python -m pip install -r requirements.txt
-python -m pip install -e .
-```
-
-### 2. Install Jupyter Notebook
-
-To run the notebooks, install Jupyter Notebook with Poetry or pip:
-
-```bash
-poetry run python -m notebook
-```
-
-Or with pip:
-
-```bash
-python -m pip install notebook
-python -m notebook
-```
-
-### 3. Open the notebooks
-
-Open the notebook server and launch the notebooks inside the `notebooks/` folder. The main workflow is:
-- `notebooks/00_exploratory_analysis.ipynb`
-- `notebooks/01_clean_data.ipynb`
-- `notebooks/02_feature_engineering.ipynb`
-- `notebooks/03_train_model.ipynb`
-- `notebooks/04_run_service.ipynb`
-- `notebooks/05_test_api.ipynb`
 
 ### 4. Explore the raw dataset
 
