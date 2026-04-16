@@ -106,7 +106,7 @@ These methods form a robust foundation for environmental data projects, emphasiz
 - `bentofile.yaml` — BentoML packaging configuration
 - `data/raw/` — original raw Seattle dataset
 - `data/processed/` — processed dataset ready for modeling
-- `src/seattle_energy/` — modular pipeline code and shared routines
+- `src/seattle_energy/` — core reusable pipeline modules shared by notebooks and service code
   - `data_processing.py` — data cleaning and feature engineering
   - `model_training.py` — training, evaluation, and BentoML export
   - `service.py` — BentoML service and validation logic
@@ -119,6 +119,7 @@ These methods form a robust foundation for environmental data projects, emphasiz
   - `05_test_api.ipynb` — test the prediction endpoint with example payloads
 
 > The local folder `old-projet/` contains reference notebooks and files that are intentionally ignored on GitHub. The public student workflow is in `notebooks/`.
+> `old_scripts/` is not required for the core pipeline logic; il s’agit de simples scripts de lancement autour du package `src/seattle_energy/`.
 
 ## Step-by-step student workflow
 
