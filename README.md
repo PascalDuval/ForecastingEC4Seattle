@@ -1,42 +1,42 @@
-# Seattle Building Energy Forecast — Guide étudiant
+# Seattle Building Energy Forecast — Student Guide
 
-Ce dépôt est un projet d'apprentissage complet pour prédire la consommation énergétique des bâtiments de Seattle. Il couvre l'intégralité du cycle de vie ML : nettoyage des données → feature engineering → entraînement → déploiement API.
+This repository is a complete learning project for predicting energy consumption in Seattle buildings. It covers the full ML lifecycle: data cleaning → feature engineering → model training → API deployment.
 
-> **Aucun résultat numérique n'est fourni.** Vous devez exécuter le pipeline vous-même et interpréter les sorties.
-
----
-
-## Table des matières
-
-1. [Prérequis](#1-prérequis)
-2. [Cloner le dépôt](#2-cloner-le-dépôt)
-3. [Créer et activer l'environnement](#3-créer-et-activer-lenvironnement)
-4. [Installer les dépendances](#4-installer-les-dépendances)
-5. [Lancer Jupyter et les notebooks](#5-lancer-jupyter-et-les-notebooks)
-6. [Entraîner le modèle](#6-entraîner-le-modèle)
-7. [Démarrer le service BentoML](#7-démarrer-le-service-bentoml)
-8. [Tester l'API](#8-tester-lapi)
-9. [Déploiement Docker (optionnel)](#9-déploiement-docker-optionnel)
-10. [Structure du projet](#10-structure-du-projet)
-11. [Objectifs pédagogiques](#11-objectifs-pédagogiques)
+> **No numeric results are provided.** You must run the pipeline yourself and interpret the outputs.
 
 ---
 
-## 1. Prérequis
+## Table of Contents
 
-Avant de commencer, vérifiez que vous disposez de :
+1. [Prerequisites](#1-prerequisites)
+2. [Clone the Repository](#2-clone-the-repository)
+3. [Create and Activate the Environment](#3-create-and-activate-the-environment)
+4. [Install Dependencies](#4-install-dependencies)
+5. [Launch Jupyter and the Notebooks](#5-launch-jupyter-and-the-notebooks)
+6. [Train the Model](#6-train-the-model)
+7. [Start the BentoML Service](#7-start-the-bentoml-service)
+8. [Test the API](#8-test-the-api)
+9. [Docker Deployment (Optional)](#9-docker-deployment-optional)
+10. [Project Structure](#10-project-structure)
+11. [Learning Objectives](#11-learning-objectives)
 
-| Outil | Version minimale | Vérification |
+---
+
+## 1. Prerequisites
+
+Before you start, make sure you have the following installed:
+
+| Tool | Minimum version | Check |
 |---|---|---|
 | Python | **3.11** | `python --version` |
-| pip | dernière | `pip --version` |
-| Git | toute version récente | `git --version` |
+| pip | latest | `pip --version` |
+| Git | any recent version | `git --version` |
 
-> **Windows** : utilisez PowerShell ou le terminal VS Code. Évitez l'invite de commandes classique (`cmd`).
+> **Windows users**: use PowerShell or the VS Code integrated terminal. Avoid the classic Command Prompt (`cmd`).
 
 ---
 
-## 2. Cloner le dépôt
+## 2. Clone the Repository
 
 ```bash
 git clone https://github.com/PascalDuval/ForecastingEC4Seattle.git
@@ -45,62 +45,62 @@ cd ForecastingEC4Seattle
 
 ---
 
-## 3. Créer et activer l'environnement
+## 3. Create and Activate the Environment
 
-Choisissez **une seule** des deux options ci-dessous. L'option A (venv) est la plus simple.
+Choose **one** of the two options below. Option A (venv) is the simplest to get started.
 
-### Option A — venv + pip (recommandé pour débuter)
+### Option A — venv + pip (recommended for beginners)
 
-**Créer l'environnement virtuel :**
+**Create the virtual environment:**
 
 ```bash
 python -m venv .venv
 ```
 
-**Activer l'environnement :**
+**Activate the environment:**
 
-- Windows (PowerShell) :
+- Windows (PowerShell):
   ```powershell
   .venv\Scripts\Activate.ps1
   ```
-  > Si PowerShell bloque l'exécution de scripts, exécutez d'abord :
+  > If PowerShell blocks script execution, run this first:
   > `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`
 
-- macOS / Linux :
+- macOS / Linux:
   ```bash
   source .venv/bin/activate
   ```
 
-Une fois activé, votre invite affiche `(.venv)` au début.
+Once activated, your prompt will show `(.venv)` at the beginning.
 
 ---
 
-### Option B — Poetry (gestion avancée des dépendances)
+### Option B — Poetry (advanced dependency management)
 
 ```bash
-# Installer Poetry si ce n'est pas déjà fait
+# Install Poetry if not already installed
 pip install poetry
 
-# Installer les dépendances et créer l'environnement automatiquement
+# Install all dependencies and create the environment automatically
 poetry install
 
-# Activer le shell Poetry
+# Activate the Poetry shell
 poetry shell
 ```
 
 ---
 
-## 4. Installer les dépendances
+## 4. Install Dependencies
 
-> Si vous utilisez Poetry (option B), cette étape est déjà effectuée par `poetry install`.
+> If you used Poetry (Option B), this step was already done by `poetry install`.
 
-Avec l'environnement activé (option A) :
+With the environment activated (Option A):
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Pour vérifier que tout est bien installé :
+To verify the installation:
 
 ```bash
 python -c "import pandas, sklearn, bentoml; print('OK')"
@@ -108,36 +108,36 @@ python -c "import pandas, sklearn, bentoml; print('OK')"
 
 ---
 
-## 5. Lancer Jupyter et les notebooks
+## 5. Launch Jupyter and the Notebooks
 
-Avec l'environnement activé, démarrez Jupyter :
+With the environment activated, start Jupyter:
 
 ```bash
 jupyter notebook
 ```
 
-Un onglet s'ouvre dans votre navigateur. Naviguez vers le dossier `notebooks/` et exécutez les notebooks **dans l'ordre** :
+A browser tab will open. Navigate to the `notebooks/` folder and run the notebooks **in order**:
 
-| Fichier | Contenu |
+| File | Content |
 |---|---|
-| `00_exploratory_analysis.ipynb` | Analyse exploratoire des données brutes |
-| `01_clean_data.ipynb` | Nettoyage et purge des outliers |
-| `02_feature_engineering.ipynb` | Construction des features |
-| `03_train_model.ipynb` | Entraînement et évaluation du modèle |
-| `04_run_service.ipynb` | Démarrage du service BentoML |
-| `05_test_api.ipynb` | Tests de l'API avec des requêtes HTTP |
+| `00_exploratory_analysis.ipynb` | Exploratory analysis of the raw data |
+| `01_clean_data.ipynb` | Data cleaning and outlier removal |
+| `02_feature_engineering.ipynb` | Feature construction |
+| `03_train_model.ipynb` | Model training and evaluation |
+| `04_run_service.ipynb` | Starting the BentoML service |
+| `05_test_api.ipynb` | API testing with HTTP requests |
 
-**Dans VS Code**, vous pouvez aussi ouvrir directement un `.ipynb`. Vérifiez que le kernel sélectionné correspond bien à votre environnement virtuel (`.venv` ou Poetry).
+**In VS Code**, you can also open `.ipynb` files directly. Make sure the selected kernel matches your virtual environment (`.venv` or Poetry).
 
-> **Important** : exécutez les notebooks dans l'ordre. Chaque notebook produit des fichiers utilisés par le suivant.
+> **Important**: run the notebooks in order. Each notebook produces files that the next one depends on.
 
 ---
 
-## 6. Entraîner le modèle
+## 6. Train the Model
 
-Le notebook `03_train_model.ipynb` entraîne le modèle et le sauvegarde dans le store BentoML local.
+The notebook `03_train_model.ipynb` trains the model and saves it to the local BentoML model store.
 
-Vous pouvez aussi l'entraîner en ligne de commande (environnement activé) :
+You can also train it from the command line (with the environment activated):
 
 ```bash
 python -c "
@@ -146,7 +146,7 @@ train_and_save()
 "
 ```
 
-Pour lister les modèles enregistrés :
+To list all registered models:
 
 ```bash
 bentoml models list
@@ -154,32 +154,32 @@ bentoml models list
 
 ---
 
-## 7. Démarrer le service BentoML
+## 7. Start the BentoML Service
 
-Une fois le modèle enregistré, démarrez l'API de prédiction :
+Once the model is registered, start the prediction API:
 
 ```bash
 bentoml serve seattle_energy.service:EnergyService --reload
 ```
 
-Le service écoute sur **http://localhost:3000**.
+The service listens on **http://localhost:3000**.
 
-- Interface Swagger interactive : [http://localhost:3000](http://localhost:3000)
-- Laisser ce terminal ouvert pendant les tests.
+- Interactive Swagger UI: [http://localhost:3000](http://localhost:3000)
+- Keep this terminal open while testing.
 
-> `--reload` recharge automatiquement le code si vous modifiez `src/seattle_energy/service.py`.
+> `--reload` automatically reloads the code when you modify `src/seattle_energy/service.py`.
 
 ---
 
-## 8. Tester l'API
+## 8. Test the API
 
-Ouvrez un **nouveau terminal** (avec l'environnement activé) et exécutez le notebook `05_test_api.ipynb`, ou lancez directement :
+Open a **new terminal** (with the environment activated) and run the notebook `05_test_api.ipynb`, or run directly:
 
 ```bash
 python old_scripts/test_api.py
 ```
 
-Vous pouvez aussi tester manuellement avec `curl` :
+You can also test manually with `curl`:
 
 ```bash
 curl -X POST http://localhost:3000/predict \
@@ -189,30 +189,30 @@ curl -X POST http://localhost:3000/predict \
 
 ---
 
-## 9. Déploiement Docker (optionnel)
+## 9. Docker Deployment (Optional)
 
-Pour construire et lancer le service dans un conteneur Docker :
+To build and run the service in a Docker container:
 
 ```bash
-# Construire l'image
+# Build the image
 docker build -t seattle-energy-service .
 
-# Lancer le conteneur
+# Run the container
 docker run -p 3000:3000 seattle-energy-service
 ```
 
-Le service est alors accessible à la même adresse : [http://localhost:3000](http://localhost:3000).
+The service is then accessible at the same address: [http://localhost:3000](http://localhost:3000).
 
 ---
 
-## 10. Structure du projet
+## 10. Project Structure
 
 ```
 dataprojet6/
 ├── data/
-│   ├── raw/                   # Données brutes originales
-│   └── processed/             # Données nettoyées et feature-engineered
-├── notebooks/                 # Notebooks à exécuter dans l'ordre
+│   ├── raw/                   # Original raw data
+│   └── processed/             # Cleaned and feature-engineered data
+├── notebooks/                 # Notebooks to run in order
 │   ├── 00_exploratory_analysis.ipynb
 │   ├── 01_clean_data.ipynb
 │   ├── 02_feature_engineering.ipynb
@@ -220,35 +220,35 @@ dataprojet6/
 │   ├── 04_run_service.ipynb
 │   └── 05_test_api.ipynb
 ├── src/
-│   └── seattle_energy/        # Code source du projet (package Python)
+│   └── seattle_energy/        # Project source code (Python package)
 │       ├── data_processing.py
 │       ├── model_training.py
 │       └── service.py
-├── tests/                     # Tests unitaires
-├── bentofile.yaml             # Configuration du service BentoML
-├── Dockerfile                 # Image Docker du service
-├── pyproject.toml             # Métadonnées et dépendances (Poetry)
-└── requirements.txt           # Dépendances pip
+├── tests/                     # Unit tests
+├── bentofile.yaml             # BentoML service configuration
+├── Dockerfile                 # Docker image for the service
+├── pyproject.toml             # Project metadata and dependencies (Poetry)
+└── requirements.txt           # pip dependencies
 ```
 
 ---
 
-## 11. Objectifs pédagogiques
+## 11. Learning Objectives
 
-Ce projet vous permet d'acquérir les compétences suivantes :
+This project helps you build the following skills:
 
-- **Préparation des données** : nettoyage, détection d'outliers, encodage, normalisation
-- **Feature engineering** : construction de variables pertinentes pour la régression
-- **Modélisation** : entraînement, validation croisée, optimisation des hyperparamètres (R², MAE, RMSE)
-- **Déploiement** : emballage du modèle avec BentoML, exposition via une API REST
-- **Containerisation** : packaging Docker pour un déploiement reproductible
-- **Bonnes pratiques** : gestion de l'environnement, versionnage avec Git
+- **Data preparation**: cleaning, outlier detection, encoding, normalization
+- **Feature engineering**: building relevant variables for regression
+- **Modelling**: training, cross-validation, hyperparameter tuning (R², MAE, RMSE)
+- **Deployment**: packaging the model with BentoML, exposing it as a REST API
+- **Containerization**: Docker packaging for reproducible deployment
+- **Best practices**: environment management, version control with Git
 
-### Évaluation
+### Assessment
 
-- Pipeline complet exécuté sans erreur
-- Interprétation des métriques de performance
-- Extension du projet : nouveau modèle, nouvelle feature, ou nouvel endpoint API
+- Full pipeline executed without errors
+- Interpretation of performance metrics
+- Extension of the project: new model, new feature, or new API endpoint
 - Documentation of changes and rationale in commit messages or a personal report.
 
 ### Prerequisites
