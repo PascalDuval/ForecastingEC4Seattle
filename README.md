@@ -1,103 +1,254 @@
-# Seattle Building Energy Forecast — Student Case Study
+# Seattle Building Energy Forecast — Guide étudiant
 
-This repository is a learning project for predicting energy consumption in Seattle buildings. It is designed to help students run a complete data science workflow, verify results, and innovate with new models and APIs.
+Ce dépôt est un projet d'apprentissage complet pour prédire la consommation énergétique des bâtiments de Seattle. Il couvre l'intégralité du cycle de vie ML : nettoyage des données → feature engineering → entraînement → déploiement API.
 
-This case study was originally built using Seattle data, but it is intended to be adapted by students for their own energy consumption datasets. For example, students in other regions can reuse the same pipeline with local data and use the exercise to explore regional and ecological energy questions.
+> **Aucun résultat numérique n'est fourni.** Vous devez exécuter le pipeline vous-même et interpréter les sorties.
 
-## Purpose and Scope
+---
 
-This case study aims to help every student:
-- transform raw energy data into model-ready features
-- train and evaluate a regression model
-- package the model as a production-ready service with BentoML
-- serve predictions through an API
-- build confidence in the complete ML lifecycle
+## Table des matières
 
-> No final model metrics or numeric results are provided here. Students must run the pipeline themselves and interpret the outputs.
+1. [Prérequis](#1-prérequis)
+2. [Cloner le dépôt](#2-cloner-le-dépôt)
+3. [Créer et activer l'environnement](#3-créer-et-activer-lenvironnement)
+4. [Installer les dépendances](#4-installer-les-dépendances)
+5. [Lancer Jupyter et les notebooks](#5-lancer-jupyter-et-les-notebooks)
+6. [Entraîner le modèle](#6-entraîner-le-modèle)
+7. [Démarrer le service BentoML](#7-démarrer-le-service-bentoml)
+8. [Tester l'API](#8-tester-lapi)
+9. [Déploiement Docker (optionnel)](#9-déploiement-docker-optionnel)
+10. [Structure du projet](#10-structure-du-projet)
+11. [Objectifs pédagogiques](#11-objectifs-pédagogiques)
 
-## Learning Objectives
+---
 
-By working with this project, students should be able to:
-- prepare raw data for machine learning
-- perform feature engineering for regression
-- split data into training and test sets
-- evaluate model performance with R², MAE, and RMSE
-- wrap a model in a BentoML API
-- verify service behavior with client requests
-- extend the pipeline with new models, features, or endpoints
+## 1. Prérequis
 
-## Quick Start Guide
+Avant de commencer, vérifiez que vous disposez de :
 
-### 1. Clone the Repository
-To get started, clone this repository to your local machine:
+| Outil | Version minimale | Vérification |
+|---|---|---|
+| Python | **3.11** | `python --version` |
+| pip | dernière | `pip --version` |
+| Git | toute version récente | `git --version` |
+
+> **Windows** : utilisez PowerShell ou le terminal VS Code. Évitez l'invite de commandes classique (`cmd`).
+
+---
+
+## 2. Cloner le dépôt
 
 ```bash
 git clone https://github.com/PascalDuval/ForecastingEC4Seattle.git
 cd ForecastingEC4Seattle
 ```
 
-### 2. Set Up Your Environment
-This project requires Python 3.11 or higher. We recommend using a virtual environment to manage dependencies.
+---
 
-#### Option 1: Using Poetry (Recommended for Students)
-Poetry is a modern dependency manager that makes it easy to install and manage packages.
+## 3. Créer et activer l'environnement
 
-- Install Poetry: Follow the instructions at [https://python-poetry.org/docs/#installation](https://python-poetry.org/docs/#installation)
-- Install dependencies:
-  ```bash
-  poetry install
+Choisissez **une seule** des deux options ci-dessous. L'option A (venv) est la plus simple.
+
+### Option A — venv + pip (recommandé pour débuter)
+
+**Créer l'environnement virtuel :**
+
+```bash
+python -m venv .venv
+```
+
+**Activer l'environnement :**
+
+- Windows (PowerShell) :
+  ```powershell
+  .venv\Scripts\Activate.ps1
   ```
-- Activate the virtual environment:
-  ```bash
-  poetry shell
-  ```
+  > Si PowerShell bloque l'exécution de scripts, exécutez d'abord :
+  > `Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned`
 
-#### Option 2: Using pip and venv
-If you prefer using pip, you can create a virtual environment manually.
-
-- Create a virtual environment:
+- macOS / Linux :
   ```bash
-  python -m venv .venv
-  ```
-- Activate the virtual environment:
-  - On Windows: `.venv\Scripts\activate`
-  - On macOS/Linux: `source .venv/bin/activate`
-- Install dependencies:
-  ```bash
-  pip install -r requirements.txt
+  source .venv/bin/activate
   ```
 
-### 3. Run the Notebooks
-Open Jupyter Notebook and follow the workflow in the `notebooks/` folder:
+Une fois activé, votre invite affiche `(.venv)` au début.
+
+---
+
+### Option B — Poetry (gestion avancée des dépendances)
+
+```bash
+# Installer Poetry si ce n'est pas déjà fait
+pip install poetry
+
+# Installer les dépendances et créer l'environnement automatiquement
+poetry install
+
+# Activer le shell Poetry
+poetry shell
+```
+
+---
+
+## 4. Installer les dépendances
+
+> Si vous utilisez Poetry (option B), cette étape est déjà effectuée par `poetry install`.
+
+Avec l'environnement activé (option A) :
+
+```bash
+pip install -r requirements.txt
+```
+
+Pour vérifier que tout est bien installé :
+
+```bash
+python -c "import pandas, sklearn, bentoml; print('OK')"
+```
+
+---
+
+## 5. Lancer Jupyter et les notebooks
+
+Avec l'environnement activé, démarrez Jupyter :
 
 ```bash
 jupyter notebook
 ```
 
-Start with `notebooks/00_exploratory_analysis.ipynb` and proceed through the numbered notebooks.
+Un onglet s'ouvre dans votre navigateur. Naviguez vers le dossier `notebooks/` et exécutez les notebooks **dans l'ordre** :
 
-## Syllabus
+| Fichier | Contenu |
+|---|---|
+| `00_exploratory_analysis.ipynb` | Analyse exploratoire des données brutes |
+| `01_clean_data.ipynb` | Nettoyage et purge des outliers |
+| `02_feature_engineering.ipynb` | Construction des features |
+| `03_train_model.ipynb` | Entraînement et évaluation du modèle |
+| `04_run_service.ipynb` | Démarrage du service BentoML |
+| `05_test_api.ipynb` | Tests de l'API avec des requêtes HTTP |
 
-This case study is part of a data engineering and machine learning curriculum focused on real-world applications in environmental prediction (inspired by Seattle emissions and energy data). The syllabus covers:
+**Dans VS Code**, vous pouvez aussi ouvrir directement un `.ipynb`. Vérifiez que le kernel sélectionné correspond bien à votre environnement virtuel (`.venv` ou Poetry).
 
-### Pedagogical Objectives
-- Understand the end-to-end data science pipeline from raw data to deployed API.
-- Develop skills in data preprocessing, model training, and production deployment.
-- Learn best practices for reproducible and scalable ML projects.
-- Encourage experimentation and critical thinking in model improvement.
+> **Important** : exécutez les notebooks dans l'ordre. Chaque notebook produit des fichiers utilisés par le suivant.
 
-### Key Competencies Acquired
-- Data manipulation with Pandas and NumPy.
-- Feature engineering for predictive modeling.
-- Regression analysis and hyperparameter tuning with Scikit-learn.
-- API development and validation with BentoML and Pydantic.
-- Containerization and deployment with Docker.
-- Version control and collaborative development with Git and GitHub.
+---
 
-### Assessment and Evaluation
-- Successful execution of the full pipeline (data preparation, training, service).
-- Ability to interpret model metrics and suggest improvements.
-- Extension of the project with new features or models.
+## 6. Entraîner le modèle
+
+Le notebook `03_train_model.ipynb` entraîne le modèle et le sauvegarde dans le store BentoML local.
+
+Vous pouvez aussi l'entraîner en ligne de commande (environnement activé) :
+
+```bash
+python -c "
+from seattle_energy.model_training import train_and_save
+train_and_save()
+"
+```
+
+Pour lister les modèles enregistrés :
+
+```bash
+bentoml models list
+```
+
+---
+
+## 7. Démarrer le service BentoML
+
+Une fois le modèle enregistré, démarrez l'API de prédiction :
+
+```bash
+bentoml serve seattle_energy.service:EnergyService --reload
+```
+
+Le service écoute sur **http://localhost:3000**.
+
+- Interface Swagger interactive : [http://localhost:3000](http://localhost:3000)
+- Laisser ce terminal ouvert pendant les tests.
+
+> `--reload` recharge automatiquement le code si vous modifiez `src/seattle_energy/service.py`.
+
+---
+
+## 8. Tester l'API
+
+Ouvrez un **nouveau terminal** (avec l'environnement activé) et exécutez le notebook `05_test_api.ipynb`, ou lancez directement :
+
+```bash
+python old_scripts/test_api.py
+```
+
+Vous pouvez aussi tester manuellement avec `curl` :
+
+```bash
+curl -X POST http://localhost:3000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"BuildingType": "Office", "GrossFloorArea": 5000, "YearBuilt": 1990}'
+```
+
+---
+
+## 9. Déploiement Docker (optionnel)
+
+Pour construire et lancer le service dans un conteneur Docker :
+
+```bash
+# Construire l'image
+docker build -t seattle-energy-service .
+
+# Lancer le conteneur
+docker run -p 3000:3000 seattle-energy-service
+```
+
+Le service est alors accessible à la même adresse : [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 10. Structure du projet
+
+```
+dataprojet6/
+├── data/
+│   ├── raw/                   # Données brutes originales
+│   └── processed/             # Données nettoyées et feature-engineered
+├── notebooks/                 # Notebooks à exécuter dans l'ordre
+│   ├── 00_exploratory_analysis.ipynb
+│   ├── 01_clean_data.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_train_model.ipynb
+│   ├── 04_run_service.ipynb
+│   └── 05_test_api.ipynb
+├── src/
+│   └── seattle_energy/        # Code source du projet (package Python)
+│       ├── data_processing.py
+│       ├── model_training.py
+│       └── service.py
+├── tests/                     # Tests unitaires
+├── bentofile.yaml             # Configuration du service BentoML
+├── Dockerfile                 # Image Docker du service
+├── pyproject.toml             # Métadonnées et dépendances (Poetry)
+└── requirements.txt           # Dépendances pip
+```
+
+---
+
+## 11. Objectifs pédagogiques
+
+Ce projet vous permet d'acquérir les compétences suivantes :
+
+- **Préparation des données** : nettoyage, détection d'outliers, encodage, normalisation
+- **Feature engineering** : construction de variables pertinentes pour la régression
+- **Modélisation** : entraînement, validation croisée, optimisation des hyperparamètres (R², MAE, RMSE)
+- **Déploiement** : emballage du modèle avec BentoML, exposition via une API REST
+- **Containerisation** : packaging Docker pour un déploiement reproductible
+- **Bonnes pratiques** : gestion de l'environnement, versionnage avec Git
+
+### Évaluation
+
+- Pipeline complet exécuté sans erreur
+- Interprétation des métriques de performance
+- Extension du projet : nouveau modèle, nouvelle feature, ou nouvel endpoint API
 - Documentation of changes and rationale in commit messages or a personal report.
 
 ### Prerequisites
