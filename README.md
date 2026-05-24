@@ -1,4 +1,4 @@
-# Seattle Building Energy Forecast — Student Guide
+# Conso Batiment (Seattle 2016) — Student Guide
 
 This repository is a complete learning project for predicting energy consumption in Seattle buildings. It covers the full ML lifecycle: data cleaning → feature engineering → model training → API deployment.
 
