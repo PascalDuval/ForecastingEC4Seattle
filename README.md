@@ -1,5 +1,7 @@
 ﻿# Conso Batiment (Seattle 2016) - Student Guide
 
+Acces direct a la mission PDF: [documentation/MissionDataEngineeringCEBSeattle.pdf](documentation/MissionDataEngineeringCEBSeattle.pdf)
+
 Ce projet couvre un pipeline ML complet: preparation des donnees, feature engineering, entrainement, puis exposition d une API de prediction avec BentoML.
 
 ## 1) Prerequis
