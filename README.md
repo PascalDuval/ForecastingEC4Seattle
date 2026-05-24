@@ -62,21 +62,50 @@ Executer les notebooks dans cet ordre:
 5. notebooks/04_run_service.ipynb
 6. notebooks/05_test_api.ipynb
 
-## 4) BentoML: c est quoi?
+## 4) BentoML: c est quoi, et a quoi ca sert?
 
-BentoML est un framework de model serving pour transformer un modele ML en API HTTP.
+BentoML est un framework de mise en production de modeles ML.
+
+L idee principale:
+- ton notebook entraine un modele,
+- BentoML enregistre ce modele,
+- puis BentoML l expose comme une API HTTP,
+- enfin BentoML permet de packager le tout pour un deploiement stable.
+
+Pourquoi c est utile:
+- eviter de recoder une API manuellement autour du modele
+- standardiser le passage de experimentation a production
+- garder le meme comportement entre local, Docker et serveur
+- versionner les modeles (ex: random_forest_energy:latest)
 
 Concretement, BentoML sert a:
-
 - enregistrer le modele entraine dans un model store local
 - exposer des endpoints API (ex: /predict, /ping)
 - packager le service avec sa configuration dans un artefact deployable (un Bento)
 - faciliter la containerisation et le deploiement
 
 Dans ce projet:
-
 - le service API est defini dans src/seattle_energy/service.py
-- la config de packaging est dans bento/bentofile.yaml
+- la configuration Bento est dans bento/bentofile.yaml
+- le conteneur est defini dans bento/Dockerfile
+
+Cycle de vie BentoML dans ce repo:
+1. entrainer le modele
+2. sauvegarder le modele dans BentoML
+3. lancer l API avec bentoml serve
+4. construire un Bento avec bentoml build
+5. deployer en Docker
+
+Schema rapide du flux BentoML:
+
+```mermaid
+flowchart LR
+	A[Notebook 03 train model] --> B[Modele enregistre dans BentoML]
+	B --> C[Service API seattle_energy.service:EnergyService]
+	C --> D[bentoml serve en local]
+	C --> E[bentoml build via bento/bentofile.yaml]
+	E --> F[Image Docker via bento/Dockerfile]
+```
 
 ## 5) Comment activer et lancer BentoML
 
@@ -166,7 +195,14 @@ dataprojet6/
 └── requirements.txt
 ```
 
-## 9) Remarques
+## 9) Documentation (dossier dedie)
+
+Le dossier documentation est versionne dans ce depot.
+
+Document present:
+- documentation/MissionDataEngineeringCEBSeattle.pdf
+
+## 10) Remarques
 
 - Aucun resultat numerique final n est fourni: il faut executer le pipeline.
 - Si bentoml serve echoue, verifier d abord que le modele est bien enregistre avec bentoml models list.
